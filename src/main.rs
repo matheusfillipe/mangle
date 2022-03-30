@@ -51,5 +51,5 @@ fn main() {
     let context = Context {
         cache_dir: make_cache().unwrap(),
     };
-    repl(context)
+    repl(context);
 }

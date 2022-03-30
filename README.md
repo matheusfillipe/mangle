@@ -1,3 +1,5 @@
+### WIP: This is a work in progress, there is nothing working yet
+
 # Mangle
 
 An exolang (A scripting programming language just for fun) without any reserved keywords that can run any utf8 compatible with more than 2 space separated words on it.
