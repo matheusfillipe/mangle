@@ -3,7 +3,7 @@
 An exolang (A scripting programming language just for fun) without any reserved keywords that can run any utf8 compatible with more than 2 space separated words on it.
 
 ## How it works
-There are only labels, variables and operators. All variables are globally scoped, there are no locals, classes or anything fancy.
+There are only labels, variables and operators. All variables are globally scoped, there are no locals, classes or anything fancy. All variables are dynamically typed and shadowed.
 
 ### Sentences
 The only type of scope is sentences. Sentences are like english sentences, any text that comes before the punctuation marks: `.,;:?!`. All the other symbols will be interpreted as variable names, operators, labels, strings or numbers.
