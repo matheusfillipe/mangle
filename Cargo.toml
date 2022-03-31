@@ -8,3 +8,4 @@ edition = "2021"
 [dependencies]
 rustyline = "9.1.0"
 dirs = "4.0"
+unicode-segmentation = "1.6.0"
