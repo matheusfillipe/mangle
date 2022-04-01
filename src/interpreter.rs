@@ -1,0 +1,39 @@
+use crate::operators::*;
+
+struct Scope {}
+
+pub struct Interpreter {
+    word_separator: char,
+    scope: Scope,
+}
+
+impl Interpreter {
+    pub fn new(word_separator: char) -> Interpreter {
+        Interpreter { scope: Scope {},
+            word_separator,
+        }
+    }
+
+    pub fn eval(&mut self, input: &str) -> Result<String, String> {
+        let inputlist = input.split(self.word_separator).collect::<Vec<&str>>();
+        // OP var1 var2
+        match inputlist[..] {
+            [op, var1, var2, ..] => {
+                match get_operator(op) {
+                    Some(operator) => {
+                        if operator.num_args != inputlist.len() - 1 {
+                            return Err(format!("Invalid number of arguments for operator {}", operator.name));
+                        }
+                        let result = (operator.func)([var1, var2].map(|x| x.to_string()).to_vec());
+                        match result.result {
+                            Ok(value) => Ok(value.value),
+                            Err(err) => Err(err),
+                        }
+                    },
+                    None => Err(format!("Invalid operator {}", op)),
+                }
+            },
+            _ => Err(format!("{}", input)),
+        }
+    }
+}
