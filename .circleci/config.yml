@@ -8,19 +8,19 @@ workflows:
             only: /.*/
 
       - deploy:
-        requires:
-          - build
-        filters:
-          tags:
-            only: /^v[0-9]+(\.[0-9]+)*$/
-          branches:
-            ignore: /.*/
+          filters:
+            tags:
+              only: /^v[0-9]+(\.[0-9]+)*$/
+            branches:
+              ignore: /.*/
+          requires:
+            - build-and-test
 
 jobs:
   build-and-test:
     docker:
       - image: circleci/rust
-    setps:
+    steps:
       - checkout
       - run:
           name: Version information
@@ -50,4 +50,7 @@ jobs:
   deploy:
     docker:
       - image: circleci/rust
-
+    steps:
+      - run:
+          name: todo
+          command: echo "implement this"
