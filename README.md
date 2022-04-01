@@ -54,5 +54,5 @@ Operators are defined by the word's length. Here is the table of operators on th
 | 11          |          |                             |            |                                 |
 
 
-## But spaces are keywords then?
+## But then spaces are keywords heh?
 Well... In some interpretation yes, I guess I lied then, sorry about it. You can still pass the `-F` argument to change the word separator (like field separator in awk) to any other character.

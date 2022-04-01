@@ -33,7 +33,7 @@ impl Interpreter {
                     None => Err(format!("Invalid operator {}", op)),
                 }
             },
-            _ => Err(format!("{}", input)),
+            _ => Err(format!("Operator not implemented: {}", input)),
         }
     }
 }
@@ -47,6 +47,7 @@ mod tests {
         let mut interpreter = Interpreter::new(' ');
         assert_eq!(5, interpreter.eval("cat is fat").unwrap().parse::<i32>().unwrap());
     }
+
     #[test]
     #[should_panic]
     fn sum_panic() {
