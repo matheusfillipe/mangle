@@ -6,11 +6,7 @@ edition = "2021"
 [lib]
 name = "mangle"
 path = "src/lib.rs"
-
-[[sublib]]
-name = "pymangle"
-path = "src/pylib.rs"
-crate-type = ["cdylib"]
+crate-type = ["lib", "cdylib"]
 
 [[bin]]
 name = "mangle"

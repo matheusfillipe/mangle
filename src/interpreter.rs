@@ -37,3 +37,20 @@ impl Interpreter {
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn sum() {
+        let mut interpreter = Interpreter::new(' ');
+        assert_eq!(5, interpreter.eval("cat is fat").unwrap().parse::<i32>().unwrap());
+    }
+    #[test]
+    #[should_panic]
+    fn sum_panic() {
+        let mut interpreter = Interpreter::new(' ');
+        interpreter.eval("cat is very fat").unwrap().parse::<i32>().unwrap();
+    }
+}
