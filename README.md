@@ -1,3 +1,6 @@
+[![CircleCI Build Status](https://circleci.com/gh/matheusfillipe/mangle.svg?style=shield)](https://circleci.com/gh/matheusfillipe/mangle)
+[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/matheusfillipe/mangle/master/LICENSE)
+
 ### WIP: This is a work in progress, there is nothing working yet
 
 # Mangle
