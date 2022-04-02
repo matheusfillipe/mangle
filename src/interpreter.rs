@@ -14,7 +14,7 @@ impl Interpreter {
         }
     }
 
-    pub fn eval(&mut self, input: &str) -> Result<String, String> {
+    pub fn evalline(&mut self, input: &str) -> Result<String, String> {
         let inputlist = input.split(self.word_separator).collect::<Vec<&str>>();
         // OP var1 var2
         match inputlist[..] {

@@ -37,8 +37,6 @@ fn main() {
 }
 
 /// The letter counting based exolang that can interpret any type of text
-/// 
-/// You can pass a filename or - to read from stdin
 #[derive(Parser, Debug)]
 #[clap(author, version, about, long_about = None)]
 struct Args {
@@ -46,24 +44,24 @@ struct Args {
     #[clap(short = 'F', long, default_value_t = ' ')]
     field: char,
 
-    /// File to read
+    /// File to read. You can also pass - to read from stdin
     #[clap(default_value_t = String::from(""))]
     filepath: String,
 }
 
-pub fn make_cache() -> Result<String, std::io::Error> {
+fn make_cache() -> Result<String, std::io::Error> {
     let system_cache_dir = dirs::cache_dir().unwrap();
     let cache_path = system_cache_dir.join("mangle");
     fs::create_dir_all(&cache_path)?;
     Ok(cache_path.to_str().unwrap().to_string())
 }
 
-pub struct Context {
-    pub cache_dir: String,
-    pub word_separator: char,
+struct Context {
+    cache_dir: String,
+    word_separator: char,
 }
 
-pub fn repl(context: Context) {
+fn repl(context: Context) {
     // `()` can be used when no completer is required
     let mut rl = Editor::<()>::new();
     let cache_file_path = context.cache_dir.clone() + "/history";
@@ -79,7 +77,7 @@ pub fn repl(context: Context) {
                     continue;
                 }
                 rl.add_history_entry(line.as_str());
-                let result = match interpreter.eval(&line) {
+                let result = match interpreter.evalline(&line) {
                     Ok(result) => result,
                     Err(err) => format!("Error: {}", err),
                 };
