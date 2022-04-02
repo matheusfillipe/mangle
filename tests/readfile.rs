@@ -17,6 +17,7 @@ fn file_doesnt_exist() -> Result<(), Box<dyn std::error::Error>> {
 #[test]
 fn stdin() -> Result<(), Box<dyn std::error::Error>> {
     let mut cmd = Command::cargo_bin("mangle")?
+        .arg("-")
         .stdin(Stdio::piped())
         .stdout(Stdio::piped())
         .spawn()?;
@@ -27,7 +28,7 @@ fn stdin() -> Result<(), Box<dyn std::error::Error>> {
     drop(cmd_stdin);
     
     let output = cmd.wait_with_output()?;
-    assert_eq!(String::from_utf8(output.stdout).unwrap(), "5\nCTRL-D exiting...\n");
+    assert_eq!(String::from_utf8(output.stdout).unwrap(), "Reading from stdin...\n5\n");
 
     Ok(())
 }
