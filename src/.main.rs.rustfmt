@@ -1,0 +1,121 @@
+use rustyline::error::ReadlineError;
+use rustyline::Editor;
+
+extern crate dirs;
+use std::fs;
+use unicode_segmentation::UnicodeSegmentation;
+
+struct Value {
+    value: String,
+    type_: String,
+}
+
+struct OpResult {
+    result: Result<String, String>,
+    assignment: bool,
+    assign_to: String,
+    assign_value: Value,
+}
+
+struct Operator {
+    num_args: usize,
+    func: fn(Vec<String>) -> OpResult,
+}
+
+fn get_operator(op: &str) -> Option<Operator> {
+    match op.graphemes(true).count() {
+    3 => Some(Operator {  // 0
+        num_args: 1,
+        func: |args| {
+            let mut result = OpResult {
+                result: Ok(args[0].clone()),
+                assignment: false,
+                assign_to: String::new(),
+                assign_value: Value {
+                    value: String::new(),
+                    type_: String::new(),
+                },
+            };
+            result
+        },
+    })
+        _ => None,
+}
+
+struct Scope {}
+
+struct Interpreter {
+    word_separator: char,
+    scope: Scope,
+}
+
+impl Interpreter {
+    fn new(word_separator: char) -> Interpreter {
+        Interpreter {
+            scope: Scope {},
+            word_separator,
+        }
+    }
+
+    fn eval(&mut self, input: &str) -> Result<String, String> {
+        let inputlist = input.split(self.word_separator).collect::<Vec<&str>>();
+        // OP var1 var2
+        match inputlist[..] {
+            [op, var1, var2, ..] => Ok(format!("{} {} {}", var1, op, var2)),
+            _ => Err(format!("{}", input)),
+        }
+    }
+}
+
+fn make_cache() -> Result<String, std::io::Error> {
+    let system_cache_dir = dirs::cache_dir().unwrap();
+    let cache_path = system_cache_dir.join("mangle");
+    fs::create_dir_all(&cache_path)?;
+    Ok(cache_path.to_str().unwrap().to_string())
+}
+
+struct Context {
+    cache_dir: String,
+}
+
+fn repl(context: Context) {
+    // `()` can be used when no completer is required
+    let mut rl = Editor::<()>::new();
+    let cache_file_path = context.cache_dir.clone() + "/history";
+    if rl.load_history(&cache_file_path).is_err() {
+        println!("No previous history.");
+    }
+    let mut interpreter = Interpreter::new(' ');
+    loop {
+        let readline = rl.readline(">> ");
+        match readline {
+            Ok(line) => {
+                rl.add_history_entry(line.as_str());
+                let result = match interpreter.eval(&line) {
+                    Ok(result) => result,
+                    Err(err) => err,
+                };
+                println!("Line: {}", result);
+            }
+            Err(ReadlineError::Interrupted) => {
+                println!("CTRL-C");
+                break;
+            }
+            Err(ReadlineError::Eof) => {
+                println!("CTRL-D");
+                break;
+            }
+            Err(err) => {
+                println!("Error: {:?}", err);
+                break;
+            }
+        }
+    }
+    rl.save_history(&cache_file_path).unwrap();
+}
+
+fn main() {
+    let cache_dir = make_cache().unwrap();
+    let context = Context { cache_dir };
+    repl(context);
+}

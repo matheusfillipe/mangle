@@ -10,7 +10,7 @@ use pyo3::exceptions::PyValueError;
 #[pyfunction]
 fn eval(line: String) -> PyResult<String> {
     let mut interpreter = Interpreter::new(' ');
-    match interpreter.evalline(&line) {
+    match interpreter.eval_line(&line) {
         Ok(result) => Ok(result),
         Err(err) => Err(PyValueError::new_err(format!("{}", err))),
     }

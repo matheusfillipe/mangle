@@ -9,6 +9,7 @@ An exolang (A scripting programming language just for fun) without any reserved 
 
 ## Installation
 
+`cargo install mangle`
 
 
 ### Python bindings

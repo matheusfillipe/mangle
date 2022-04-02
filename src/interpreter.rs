@@ -14,7 +14,16 @@ impl Interpreter {
         }
     }
 
-    pub fn evalline(&mut self, input: &str) -> Result<String, String> {
+    /// Continuously evaluate input until EOF
+    pub fn eval(&mut self, input: &str) -> Result<String, String> {
+        // TODO populate the scope with the variables
+        // TODO evaluate
+        let result = self.eval_line(input).unwrap_or("Error.".to_string());
+        Ok(result.to_string())
+    }
+
+    /// Evaluates a line like if it was the full code
+    pub fn eval_line(&mut self, input: &str) -> Result<String, String> {
         let inputlist = input.split(self.word_separator).collect::<Vec<&str>>();
         // OP var1 var2
         match inputlist[..] {
@@ -45,13 +54,13 @@ mod tests {
     #[test]
     fn sum() {
         let mut interpreter = Interpreter::new(' ');
-        assert_eq!(5, interpreter.evalline("cat is fat").unwrap().parse::<i32>().unwrap());
+        assert_eq!(5, interpreter.eval_line("cat is fat").unwrap().parse::<i32>().unwrap());
     }
 
     #[test]
     #[should_panic]
     fn sum_panic() {
         let mut interpreter = Interpreter::new(' ');
-        interpreter.evalline("cat is very fat").unwrap().parse::<i32>().unwrap();
+        interpreter.eval_line("cat is very fat").unwrap().parse::<i32>().unwrap();
     }
 }

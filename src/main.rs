@@ -6,26 +6,51 @@ use rustyline::Editor;
 
 extern crate dirs;
 use std::fs;
+use std::io::{self, BufRead, Error};
 use std::path::Path;
-use std::io::{self, BufRead};
+
+/// Evaluate mangle code and print to stdout
+fn eval_and_print(interpreter: &mut Interpreter, line: Result<String, Error>) {
+    let line = line.expect("Could not read line from standard input");
+    let result = match interpreter.eval(&line) {
+        Ok(result) => result,
+        Err(err) => err,
+    };
+    if !result.is_empty() {
+        println!("{}", result);
+    }
+}
+
+// The output is wrapped in a Result to allow matching on errors
+// Returns an Iterator to the Reader of the lines of the file.
+fn read_lines<P>(filename: P) -> io::Result<io::Lines<io::BufReader<fs::File>>>
+where P: AsRef<Path>, {
+    let file = fs::File::open(filename)?;
+    Ok(io::BufReader::new(file).lines())
+}
 
 fn main() {
     let args = Args::parse();
     if !args.filepath.is_empty() {
         if args.filepath == "-" {
             println!("Reading from stdin...");
+            let mut interpreter = Interpreter::new(args.field);
             let stdin = io::stdin();
             for line in stdin.lock().lines() {
-                let line = line.expect("Could not read line from standard in");
-                println!("{}", line);
+                eval_and_print(&mut interpreter, line);
             }
             return;
         }
         if !Path::new(&args.filepath).is_file() {
-            print!("Cannot read file at \"{}\"", args.filepath);
-            return;
+            // print!();
+            panic!("Cannot read file at \"{}\"", args.filepath);
         }
-        print!("Reading from file not implemented!");
+        if let Ok(lines) = read_lines(args.filepath) {
+            let mut interpreter = Interpreter::new(args.field);
+            for line in lines {
+                eval_and_print(&mut interpreter, line);
+            }
+        }
         return;
     }
     let cache_dir = make_cache().unwrap();
@@ -40,7 +65,7 @@ fn main() {
 #[derive(Parser, Debug)]
 #[clap(author, version, about, long_about = None)]
 struct Args {
-    /// Separator
+    /// Word separator
     #[clap(short = 'F', long, default_value_t = ' ')]
     field: char,
 
@@ -77,7 +102,7 @@ fn repl(context: Context) {
                     continue;
                 }
                 rl.add_history_entry(line.as_str());
-                let result = match interpreter.evalline(&line) {
+                let result = match interpreter.eval_line(&line) {
                     Ok(result) => result,
                     Err(err) => format!("Error: {}", err),
                 };
