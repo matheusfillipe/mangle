@@ -45,13 +45,13 @@ mod tests {
     #[test]
     fn sum() {
         let mut interpreter = Interpreter::new(' ');
-        assert_eq!(5, interpreter.eval("cat is fat").unwrap().parse::<i32>().unwrap());
+        assert_eq!(5, interpreter.evalline("cat is fat").unwrap().parse::<i32>().unwrap());
     }
 
     #[test]
     #[should_panic]
     fn sum_panic() {
         let mut interpreter = Interpreter::new(' ');
-        interpreter.eval("cat is very fat").unwrap().parse::<i32>().unwrap();
+        interpreter.evalline("cat is very fat").unwrap().parse::<i32>().unwrap();
     }
 }
