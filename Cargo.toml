@@ -1,7 +1,17 @@
 [package]
 name = "mangle"
+license = "MIT"
+homepage = "https://github.com/matheusfillipe/mangle"
+repository = "https://github.com/matheusfillipe/mangle" 
+documentation = "README.md"
+readme = "README.md"
+keywords = ["exolang", "python", "pyo3", "repl"]
+categories = ["exolang", "repl", "python"]
+description = "Exolang that can take any utf8 text as valid code and return some result out of it"
 version = "0.0.1"
 edition = "2021"
+author = "Matheus Fillipe <matheusfillipeag@gmail.com>"
+exclude = [".env/*"]
 
 [lib]
 name = "mangle"

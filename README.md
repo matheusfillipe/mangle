@@ -7,6 +7,24 @@
 
 An exolang (A scripting programming language just for fun) without any reserved keywords that can run any utf8 compatible with more than 2 space separated words on it.
 
+## Installation
+
+
+
+### Python bindings
+
+Python bindings are available for python > 3.7. You can install them with:
+
+`pip install mangle`
+
+Then you can get started evaluating mangle from python with:
+
+```python
+import mangle
+mangle.eval("cat is fat")
+>> '5'
+```
+
 ## How it works
 There are only labels, variables and operators. All variables are globally scoped, there are no locals, classes or anything fancy. All variables are dynamically typed and shadowed.
 

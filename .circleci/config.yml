@@ -17,6 +17,16 @@ workflows:
 #              only: /^v[0-9]+(\.[0-9]+)*$/
 #            branches:
 #              ignore: /.*/
+      - crates-deploy:
+          # requires:
+          #   - build-and-test
+          filters:
+            tags:
+              only: /.*/
+#            tags:
+#              only: /^v[0-9]+(\.[0-9]+)*$/
+#            branches:
+#              ignore: /.*/
 
 jobs:
   build-and-test:
@@ -27,8 +37,6 @@ jobs:
       - run:
           name: Version information
           command: rustc --version; cargo --version; rustup --version
-      # If you have committed your Cargo.lock file to version control
-      # delete this step.
       - run:
           name: Calculate dependencies
           command: cargo generate-lockfile
@@ -54,9 +62,6 @@ jobs:
       - image: ghcr.io/pyo3/maturin
     steps:
       - checkout
-      - restore_cache:
-          keys:
-            - v1-cargo-cache-{{ arch }}-{{ checksum "Cargo.lock" }}
       - run:
           name: init .pypirc
           command: |
@@ -65,5 +70,20 @@ jobs:
             echo -e "password = $PYPI_PASSWORD" >> ~/.pypirc
       - run:
           name: pypi deploy
-          command: |
-            maturin publish
+          command: maturin publish
+
+
+  crates-deploy:
+    docker:
+      - image: circleci/rust
+    steps:
+      - checkout
+      - run:
+          name: Calculate dependencies
+          command: cargo generate-lockfile
+      - restore_cache:
+          keys:
+            - v1-cargo-cache-{{ arch }}-{{ checksum "Cargo.lock" }}
+      - run:
+          name: Deploy
+          command: cargo publish --allow-dirty
