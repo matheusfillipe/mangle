@@ -65,7 +65,7 @@ fn main() {
 #[derive(Parser, Debug)]
 #[clap(author, version, about, long_about = None)]
 struct Args {
-    /// Word separator
+    /// Word separator, only accepts single character
     #[clap(short = 'F', long, default_value_t = ' ')]
     field: char,
 
