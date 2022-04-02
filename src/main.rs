@@ -69,7 +69,7 @@ struct Args {
     #[clap(short = 'F', long, default_value_t = ' ')]
     field: char,
 
-    /// File to read. You can also pass - to read from stdin
+    /// File to read. You can also use '-' to read from stdin. Omiting this argument will launch the REPL
     #[clap(default_value_t = String::from(""))]
     filepath: String,
 }

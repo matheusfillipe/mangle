@@ -22,8 +22,9 @@ impl Interpreter {
         Ok(result.to_string())
     }
 
-    /// Evaluates a line like if it was the full code
+    /// Evaluates a line like if it was the full code but keeps the scope
     pub fn eval_line(&mut self, input: &str) -> Result<String, String> {
+        // TODO populate the scope with the variables
         let inputlist = input.split(self.word_separator).collect::<Vec<&str>>();
         // OP var1 var2
         match inputlist[..] {

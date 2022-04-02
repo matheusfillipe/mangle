@@ -1,3 +1,6 @@
+[![Pypi package](https://badge.fury.io/py/mangle.svg)](https://pypi.org/project/mangle/)
+[![Crates.io package](https://img.shields.io/crates/v/mangle.svg)](https://crates.io/crates/mangle)
+[![Chat with me on irc](https://img.shields.io/badge/-IRC-gray?logo=gitter)](irc://irc.dot.org.es:+6697/romanian)
 [![CircleCI Build Status](https://circleci.com/gh/matheusfillipe/mangle.svg?style=shield)](https://circleci.com/gh/matheusfillipe/mangle)
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/matheusfillipe/mangle/master/LICENSE)
 
