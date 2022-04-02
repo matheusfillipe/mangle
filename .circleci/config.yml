@@ -8,8 +8,8 @@ workflows:
             only: /.*/
 
       - pipy-deploy:
-          requires:
-            - build-and-test
+          # requires:
+          #   - build-and-test
           filters:
             tags:
               only: /.*/
@@ -66,5 +66,4 @@ jobs:
       - run:
           name: pypi deploy
           command: |
-            maturin init --bindings pyo3
             maturin publish
