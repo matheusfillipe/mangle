@@ -51,7 +51,7 @@ jobs:
 
   pipy-deploy:
     docker:
-      - image: pyo3/maturin
+      - image: ghcr.io/pyo3/maturin
     steps:
       - checkout
       - restore_cache:
