@@ -58,9 +58,6 @@ jobs:
           keys:
             - v1-cargo-cache-{{ arch }}-{{ checksum "Cargo.lock" }}
       - run:
-          name: Build all targets
-          command: cargo build
-      - run:
           name: init .pypirc
           command: |
             echo -e "[pypi]" >> ~/.pypirc
