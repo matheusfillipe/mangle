@@ -71,10 +71,10 @@ jobs:
           name: Run all tests
           command: cargo test
       - run:
-          name: Run coverate
+          name: Run coverage
           command: |
             ./grcov . --binary-path ./target/debug/ -s . -t lcov --branch --ignore-not-existing --ignore "/*" -o lcov.info
-            codecov -f lcov.info
+            ./codecov -f lcov.info
 
   pipy-deploy:
     docker:
