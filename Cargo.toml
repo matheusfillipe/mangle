@@ -10,7 +10,7 @@ categories = ["exolang", "repl", "python"]
 description = "Exolang that can take any utf8 text as valid code and return some result out of it"
 version = "0.0.2"
 edition = "2021"
-author = "Matheus Fillipe <matheusfillipeag@gmail.com>"
+authors = ["mattf <matheusfillipeag@gmail.com>"]
 exclude = [".env/*"]
 
 [lib]
