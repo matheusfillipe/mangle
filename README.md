@@ -3,6 +3,7 @@
 [![Chat with me on irc](https://img.shields.io/badge/-IRC-gray?logo=gitter)](https://mangle.ga/irc)
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/matheusfillipe/mangle/master/LICENSE)
 [![CircleCI Build Status](https://circleci.com/gh/matheusfillipe/mangle.svg?style=shield)](https://circleci.com/gh/matheusfillipe/mangle)
+[![codecov](https://codecov.io/gh/matheusfillipe/mangle/branch/master/graph/badge.svg)](https://codecov.io/gh/matheusfillipe/mangle)
 
 ### WIP: This is a work in progress, there is nothing working yet
 

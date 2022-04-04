@@ -52,9 +52,6 @@ jobs:
             curl -Os https://uploader.codecov.io/latest/linux/codecov
             chmod +x codecov
             rustup component add llvm-tools-preview
-            export RUSTC_BOOTSTRAP=1
-            export RUSTFLAGS="-Zinstrument-coverage"
-            export LLVM_PROFILE_FILE="mangle-%p-%m.profraw"
       - restore_cache:
           keys:
             - v1-cargo-cache-{{ arch }}-{{ checksum "Cargo.lock" }}
@@ -78,7 +75,6 @@ jobs:
       - run:
           name: Run coverage
           command: |
-            ls
             ./grcov . --binary-path ./target/debug/ -s . -t lcov --branch --ignore-not-existing --ignore "/*" -o lcov.info
             ./codecov -f lcov.info
 
