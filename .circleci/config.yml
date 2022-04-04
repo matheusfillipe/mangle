@@ -70,10 +70,15 @@ jobs:
           key: v1-cargo-cache-{{ arch }}-{{ checksum "Cargo.lock" }}
       - run:
           name: Run all tests
-          command: cargo test
+          command: |
+            export RUSTC_BOOTSTRAP=1
+            export RUSTFLAGS="-Zinstrument-coverage"
+            export LLVM_PROFILE_FILE="mangle-%p-%m.profraw"
+            cargo test
       - run:
           name: Run coverage
           command: |
+            ls
             ./grcov . --binary-path ./target/debug/ -s . -t lcov --branch --ignore-not-existing --ignore "/*" -o lcov.info
             ./codecov -f lcov.info
 
