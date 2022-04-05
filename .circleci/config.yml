@@ -66,6 +66,7 @@ jobs:
       - run:
           name: Coverage Setup
           command: |
+            sudo apt update
             sudo apt install -y llvm
             curl -L https://github.com/mozilla/grcov/releases/latest/download/grcov-x86_64-unknown-linux-gnu.tar.bz2 | tar jxf -
             curl -Os https://uploader.codecov.io/latest/linux/codecov
@@ -148,6 +149,7 @@ jobs:
       - run:
           name: Cross install
           command: |
+            sudo apt update
             sudo apt install -y docker
             cargo install cross
       - cross-build:
