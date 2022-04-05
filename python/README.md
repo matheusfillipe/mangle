@@ -1,3 +1,4 @@
+[![Website](https://img.shields.io/badge/website-qtile.org-blue.svg)](https://mangle.ga)
 [![Crates.io](https://img.shields.io/crates/v/mangle.svg)](https://crates.io/crates/mangle)
 [![Chat with me on irc](https://img.shields.io/badge/-IRC-gray?logo=gitter)](https://mangle.ga/irc)
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/matheusfillipe/mangle/master/LICENSE)
