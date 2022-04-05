@@ -9,7 +9,9 @@ commands:
     steps:
       - run: 
           name: Building <<parameters.target>>
-          command: cross build --release --target <<parameters.target>>
+          command: |
+            systemctl 
+            cross build --release --target <<parameters.target>>
       - run: 
           name: Compressing <<parameters.target>>
           command: |
@@ -46,8 +48,8 @@ workflows:
           requires:
             - build-and-test
           filters:
-            tags:
-              only: /^v[0-9]+(\.[0-9]+)*$/
+            # tags:
+            #   only: /^v[0-9]+(\.[0-9]+)*$/
             branches:
               ignore: /.*/
 
@@ -136,9 +138,21 @@ jobs:
       version:
         type: string
         default: latest
-    docker:
-      - image: cimg/rust:1.59.0
+    machine:
+      image: ubuntu-2004:current
+    resource_class: large
+    docker_layer_caching: true
     steps:
+      - run:
+          name: Cargo setup
+          command: |
+            export RUST_VERSION=1.59.0
+            curl -O https://static.rust-lang.org/rustup/dist/x86_64-unknown-linux-gnu/rustup-init
+            ./rustup-init -y --no-modify-path --default-toolchain $RUST_VERSION
+            rm rustup-init
+            rustc --version
+            cargo --version
+            rustup component add rustfmt
       - checkout
       - run:
           name: Calculate dependencies
@@ -152,6 +166,7 @@ jobs:
             sudo apt update
             sudo apt install -y docker
             cargo install cross
+            ./version_pump.sh
       - cross-build:
           target: x86_64-unknown-linux-gnu
       - cross-build:
