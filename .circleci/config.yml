@@ -1,4 +1,16 @@
 version: 2.1
+
+commands:
+  cross-build:
+    parameters:
+      target:
+        default: "x86_64-unknown-linux-gnu"
+        type: string
+    steps:
+      - run: 
+          name: Building <<parameters.target>>
+          command: cross build --release --target <<parameters.target>>
+        
 workflows:
   build_and_deploy:
     jobs:
@@ -27,8 +39,8 @@ workflows:
           requires:
             - build-and-test
           filters:
-            # tags:
-            #   only: /^v[0-9]+(\.[0-9]+)*$/
+            tags:
+              only: /^v[0-9]+(\.[0-9]+)*$/
             branches:
               ignore: /.*/
 
@@ -91,7 +103,9 @@ jobs:
             echo -e "password = $PYPI_PASSWORD" >> ~/.pypirc
       - run:
           name: pypi deploy
-          command: maturin publish
+          command: |
+            cd python/
+            maturin publish
 
 
   crates-deploy:
@@ -125,19 +139,26 @@ jobs:
           keys:
             - v1-cargo-cache-{{ arch }}-{{ checksum "Cargo.lock" }}
       - run:
-          name: Build
-          command: cargo publish --allow-dirty
-      - run:
           name: ghr install
           command: |
             wget https://github.com/tcnksm/ghr/releases/download/v0.14.0/ghr_v0.14.0_linux_amd64.tar.gz
             tar -xvzf ghr_*.tar.gz
             mv ghr_*_amd64 ghr
       - run:
-          name: Github release
+          name: Cross install
+          command: cargo install cross
+      - cross-build:
+          target: x86_64-unknown-linux-gnu
+      - cross-build:
+          target: aarch64-unknown-linux-gnu
+      - cross-build:
+          target: x86_64-pc-windows-gnu
+      - cross-build:
+          target: aarch64-linux-android
+      - cross-build:
+          target: armv7-linux-androideabi
+      - run:
+          name: Github release build
           command: |
-            rustup target add x86_64-unknown-linux-gnu
-            rustup target add armv7-unknown-linux-gnueabihf
-            rustup target add armv7-unknown-linux-gnueabihf
             export VERSION=$(git describe --tags --abbrev=0)
             ./ghr/ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete ${VERSION} ./release/

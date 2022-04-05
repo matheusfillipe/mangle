@@ -1,6 +1,6 @@
 use mangle::interpreter::Interpreter;
 
-use clap::Parser;
+use clap::{self, Parser};
 use rustyline::error::ReadlineError;
 use rustyline::Editor;
 

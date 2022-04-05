@@ -4,7 +4,7 @@ build-backend = "maturin"
 
 [project]
 name = "mangle"
-readme = "README.md"
+readme = "../README.md"
 repository = "https://github.com/matheusfillipe/mangle"
 requires-python = ">=3.7"
 classifiers = [
