@@ -114,8 +114,8 @@ jobs:
       - run:
           name: pypi deploy
           command: |
+            ./version_pump.sh
             cd python/
-            ../version_pump.sh
             maturin publish
 
 
