@@ -175,8 +175,6 @@ jobs:
       - cross-build:
           target: x86_64-pc-windows-gnu
       - cross-build:
-          target: x86_64-apple-ios-macabi
-      - cross-build:
           target: arm-linux-androideabi
       - cross-build:
           target: armv7-linux-androideabi
