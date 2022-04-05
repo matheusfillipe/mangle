@@ -115,6 +115,7 @@ jobs:
           name: pypi deploy
           command: |
             cd python/
+            ./version_pump.sh
             maturin publish
 
 
@@ -131,7 +132,9 @@ jobs:
             - v1-cargo-cache-{{ arch }}-{{ checksum "Cargo.lock" }}
       - run:
           name: Deploy
-          command: cargo publish --allow-dirty
+          command: |
+            ./version_pump.sh
+            cargo publish --allow-dirty
 
   gh-release:
     machine:
