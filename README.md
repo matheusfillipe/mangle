@@ -1,4 +1,4 @@
-[![Website](https://img.shields.io/badge/website-qtile.org-blue.svg)](https://mangle.ga)
+[![Website](https://img.shields.io/badge/website-mangle.ga-blue.svg)](https://mangle.ga)
 [![Pypi](https://badge.fury.io/py/mangle.svg)](https://pypi.org/project/mangle/)
 [![Crates.io](https://img.shields.io/crates/v/mangle.svg)](https://crates.io/crates/mangle)
 [![Chat with me on irc](https://img.shields.io/badge/-IRC-gray?logo=gitter)](https://mangle.ga/irc)
