@@ -18,7 +18,7 @@ commands:
             mkdir -p "<<parameters.target>>"
             [ -e "target/<<parameters.target>>/release/mangle" ] && cp "target/<<parameters.target>>/release/mangle" "<<parameters.target>>/"
             [ -e "target/<<parameters.target>>/release/mangle.exe" ] && cp "target/<<parameters.target>>/release/mangle.exe" "<<parameters.target>>/"
-            zip "<<parameters.target>>.zip" "<<parameters.target>>/"
+            zip "mangle-<<parameters.target>>.zip" <<parameters.target>>/*
         
 workflows:
   build_and_deploy:
