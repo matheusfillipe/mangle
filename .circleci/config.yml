@@ -27,8 +27,8 @@ workflows:
           requires:
             - build-and-test
           filters:
-            tags:
-              only: /^v[0-9]+(\.[0-9]+)*$/
+            # tags:
+            #   only: /^v[0-9]+(\.[0-9]+)*$/
             branches:
               ignore: /.*/
 
@@ -110,6 +110,10 @@ jobs:
           command: cargo publish --allow-dirty
 
   gh-release:
+    parameters:
+      version:
+        type: string
+        default: latest
     docker:
       - image: circleci/rust
     steps:
