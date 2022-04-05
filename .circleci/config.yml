@@ -139,17 +139,19 @@ jobs:
       resource_class: large
       docker_layer_caching: true
     steps:
+      - checkout
       - run:
           name: Cargo setup
           command: |
             export RUST_VERSION=1.59.0
             curl -O https://static.rust-lang.org/rustup/dist/x86_64-unknown-linux-gnu/rustup-init
+            chmod +x rustup-init
             ./rustup-init -y --no-modify-path --default-toolchain $RUST_VERSION
+            echo "source $HOME/.cargo/env" >> ~/.bashrc
+            source ~/.bashrc
             rm rustup-init
             rustc --version
             cargo --version
-            rustup component add rustfmt
-      - checkout
       - run:
           name: Calculate dependencies
           command: cargo generate-lockfile
