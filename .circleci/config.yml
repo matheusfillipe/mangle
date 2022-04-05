@@ -10,6 +10,13 @@ commands:
       - run: 
           name: Building <<parameters.target>>
           command: cross build --release --target <<parameters.target>>
+      - run: 
+          name: Compressing <<parameters.target>>
+          command: |
+            mkdir -p "<<parameters.target>>"
+            [ -e "target/<<parameters.target>>/release/mangle" ] && cp "target/<<parameters.target>>/release/mangle" "<<parameters.target>>/"
+            [ -e "target/<<parameters.target>>/release/mangle.exe" ] && cp "target/<<parameters.target>>/release/mangle.exe" "<<parameters.target>>/"
+            zip "<<parameters.target>>.zip" "<<parameters.target>>/"
         
 workflows:
   build_and_deploy:
@@ -47,7 +54,7 @@ workflows:
 jobs:
   build-and-test:
     docker:
-      - image: circleci/rust
+      - image: cimg/rust:1.59.0
     steps:
       - checkout
       - run:
@@ -110,7 +117,7 @@ jobs:
 
   crates-deploy:
     docker:
-      - image: circleci/rust
+      - image: cimg/rust:1.59.0
     steps:
       - checkout
       - run:
@@ -129,7 +136,7 @@ jobs:
         type: string
         default: latest
     docker:
-      - image: circleci/rust
+      - image: cimg/rust:1.59.0
     steps:
       - checkout
       - run:
@@ -139,14 +146,10 @@ jobs:
           keys:
             - v1-cargo-cache-{{ arch }}-{{ checksum "Cargo.lock" }}
       - run:
-          name: ghr install
-          command: |
-            wget https://github.com/tcnksm/ghr/releases/download/v0.14.0/ghr_v0.14.0_linux_amd64.tar.gz
-            tar -xvzf ghr_*.tar.gz
-            mv ghr_*_amd64 ghr
-      - run:
           name: Cross install
-          command: cargo install cross
+          command: |
+            sudo apt install -y docker
+            cargo install cross
       - cross-build:
           target: x86_64-unknown-linux-gnu
       - cross-build:
@@ -154,11 +157,19 @@ jobs:
       - cross-build:
           target: x86_64-pc-windows-gnu
       - cross-build:
-          target: aarch64-linux-android
+          target: arm-linux-androideabi
       - cross-build:
           target: armv7-linux-androideabi
       - run:
-          name: Github release build
+          name: ghr install
           command: |
+            wget https://github.com/tcnksm/ghr/releases/download/v0.14.0/ghr_v0.14.0_linux_amd64.tar.gz
+            tar -xvzf ghr_*.tar.gz
+            mv ghr_*_amd64 ghr
+      - run:
+          name: Submitting releases to Github
+          command: |
+            mkdir -p release
+            mv *.zip release/
             export VERSION=$(git describe --tags --abbrev=0)
             ./ghr/ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete ${VERSION} ./release/
