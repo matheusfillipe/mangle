@@ -29,6 +29,7 @@ import mangle
 mangle.eval("cat is fat")
 >> '5'
 ```
+More info at: https://github.com/matheusfillipe/mangle/tree/master/python
 
 ## How it works
 There are only labels, variables and operators. All variables are globally scoped, there are no locals, classes or anything fancy. All variables are dynamically typed and shadowed.
