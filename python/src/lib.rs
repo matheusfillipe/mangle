@@ -9,7 +9,7 @@ use pyo3::prelude::*;
 #[pyfunction]
 fn eval(line: String) -> PyResult<String> {
     let mut interpreter = Interpreter::new(' ');
-    match interpreter.eval_line(&line) {
+    match interpreter.eval(&line) {
         Ok(result) => Ok(result),
         Err(err) => Err(PyValueError::new_err(format!("{}", err))),
     }

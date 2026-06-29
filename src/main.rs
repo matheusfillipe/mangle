@@ -6,51 +6,38 @@ use rustyline::Editor;
 
 extern crate dirs;
 use std::fs;
-use std::io::{self, BufRead, Error};
+use std::io::{self, Read};
 use std::path::Path;
 
-/// Evaluate mangle code and print to stdout
-fn eval_and_print(interpreter: &mut Interpreter, line: Result<String, Error>) {
-    let line = line.expect("Could not read line from standard input");
-    let result = match interpreter.eval(&line) {
-        Ok(result) => result,
-        Err(err) => err,
-    };
-    if !result.is_empty() {
-        println!("{}", result);
+fn run_source(interpreter: &mut Interpreter, source: &str) {
+    match interpreter.eval(source) {
+        Ok(result) if !result.is_empty() => println!("{}", result),
+        Ok(_) => {}
+        Err(error) => eprintln!("Error: {}", error),
     }
 }
 
-// The output is wrapped in a Result to allow matching on errors
-// Returns an Iterator to the Reader of the lines of the file.
-fn read_lines<P>(filename: P) -> io::Result<io::Lines<io::BufReader<fs::File>>>
-where P: AsRef<Path>, {
-    let file = fs::File::open(filename)?;
-    Ok(io::BufReader::new(file).lines())
+fn read_to_string(path: &str) -> io::Result<String> {
+    fs::read_to_string(path)
 }
 
 fn main() {
     let args = Args::parse();
     if !args.filepath.is_empty() {
-        if args.filepath == "-" {
+        let source = if args.filepath == "-" {
             println!("Reading from stdin...");
-            let mut interpreter = Interpreter::new(args.field);
-            let stdin = io::stdin();
-            for line in stdin.lock().lines() {
-                eval_and_print(&mut interpreter, line);
+            let mut buffer = String::new();
+            io::stdin().read_to_string(&mut buffer).unwrap_or_default();
+            buffer
+        } else {
+            if !Path::new(&args.filepath).is_file() {
+                panic!("Cannot read file at \"{}\"", args.filepath);
             }
-            return;
-        }
-        if !Path::new(&args.filepath).is_file() {
-            // print!();
-            panic!("Cannot read file at \"{}\"", args.filepath);
-        }
-        if let Ok(lines) = read_lines(args.filepath) {
-            let mut interpreter = Interpreter::new(args.field);
-            for line in lines {
-                eval_and_print(&mut interpreter, line);
-            }
-        }
+            read_to_string(&args.filepath)
+                .unwrap_or_else(|_| panic!("Cannot read file at \"{}\"", args.filepath))
+        };
+        let mut interpreter = Interpreter::new(args.field);
+        run_source(&mut interpreter, &source);
         return;
     }
     let cache_dir = make_cache().unwrap();
@@ -102,7 +89,7 @@ fn repl(context: Context) {
                     continue;
                 }
                 rl.add_history_entry(line.as_str());
-                let result = match interpreter.eval_line(&line) {
+                let result = match interpreter.eval(&line) {
                     Ok(result) => result,
                     Err(err) => format!("Error: {}", err),
                 };
