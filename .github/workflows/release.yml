@@ -1,0 +1,41 @@
+name: github-release
+
+on:
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        target:
+          - x86_64-unknown-linux-gnu
+          - aarch64-unknown-linux-gnu
+          - x86_64-pc-windows-gnu
+          - arm-linux-androideabi
+          - armv7-linux-androideabi
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: taiki-e/install-action@v2
+        with:
+          tool: cross
+      - name: Build ${{ matrix.target }}
+        run: cross build --release --target ${{ matrix.target }}
+      - name: Package ${{ matrix.target }}
+        run: |
+          mkdir -p "${{ matrix.target }}"
+          bin="target/${{ matrix.target }}/release/mangle"
+          [ -e "$bin" ] && cp "$bin" "${{ matrix.target }}/"
+          [ -e "$bin.exe" ] && cp "$bin.exe" "${{ matrix.target }}/"
+          zip "mangle-${{ matrix.target }}.zip" "${{ matrix.target }}"/*
+      - name: Upload to GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: mangle-${{ matrix.target }}.zip
